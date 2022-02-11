@@ -1,11 +1,10 @@
 import os
+from datetime import datetime
 
 import requests
-from github import Github
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
-
 from dotenv import load_dotenv
+from github import Github
 
 load_dotenv()
 
@@ -13,42 +12,23 @@ load_dotenv()
 token = os.environ.get("ACCESS_TOKEN")
 username = os.environ.get("GITHUB_USERNAME")
 
-client = Github(token, per_page=100)
 
-print(client.get_repo("openstack/nova").full_name)
-print(client.get_repo("openstack/nova").id)
-print(client.get_repo("openstack/nova").description)
-print(client.get_repo("openstack/nova").url)
+def extract_commits(repo_name: str) -> list:
+    # Authentication
+    client = Github(token, per_page=100)
 
-# Subtract 20 months from current date
-n = 6
-current_date = datetime.today()
-past_date = current_date - relativedelta(months=n)
+    # Retrieve 6 months ago data i.e. subtract 6 months from current date
+    period = 6
+    current_date = datetime.today()
+    past_date = current_date - relativedelta(months=period)
 
-print(current_date)
-print(past_date)
+    commits = client.get_repo(repo_name).get_commits(since=past_date, until=current_date)
 
-print(client.get_repo("openstack/nova").get_commits(since=past_date, until=current_date).totalCount)
-commits = client.get_repo("openstack/nova").get_commits(since=past_date, until=current_date)
-commit = client.get_repo("openstack/nova").get_commit("79ec4e2938615a7524fd4c7c05cddeee8256f4a3")
-# x = 1
-# for commit in commits:
-#     print("Commit " + str(x) + " : " + commit.sha)
-#     x = x + 1
-#     client.get_repo("openstack/nova").get_commit(commit.sha)
+    # PyGithub generally provides a lazy iterator we need to exhaust the lazy iterator with a list comprehension
+    result = [commit.sha for commit in commits]
+    return result
 
 
-print(commit.author)
-print(commit.url)
-print(commit.files)
-print(type(commit.files))
-print(len(commit.files))
-print(commit.stats.total)
-print(commit.stats.additions)
-print(commit.stats.deletions)
-
-# PyGithub generally provides a lazy iterator we need to exhaust the lazy iterator with a list comprehension
-stargazers = [s.sha for s in commits]
 
 # head = {'Authorization': 'token {}'.format(token)}
 head = {
