@@ -13,12 +13,12 @@ token = os.environ.get("ACCESS_TOKEN")
 username = os.environ.get("GITHUB_USERNAME")
 
 
-def extract_commits(repo_name: str) -> list:
-    # Authentication
+def extract_commits(repo_name: str, no_of_months: int) -> list:
+    # Authentication and connection to GitHub API
     client = Github(token, per_page=100)
 
-    # Retrieve 6 months ago data i.e. subtract 6 months from current date
-    period = 6
+    # Retrieve data from 6 months ago i.e. subtract 6 months from current date
+    period = no_of_months
     current_date = datetime.today()
     past_date = current_date - relativedelta(months=period)
 
@@ -27,7 +27,6 @@ def extract_commits(repo_name: str) -> list:
     # PyGithub generally provides a lazy iterator we need to exhaust the lazy iterator with a list comprehension
     result = [commit.sha for commit in commits]
     return result
-
 
 
 # head = {'Authorization': 'token {}'.format(token)}
