@@ -1,24 +1,20 @@
 import os
+
+import requests
 from github import Github
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
-
-token = os.environ.get("ACCESS_TOKEN")
-
 # XXX: Specify your own access token here
-
-
-# Specify a username and repository of interest for that user.
+token = os.environ.get("ACCESS_TOKEN")
+username = os.environ.get("GITHUB_USERNAME")
 
 client = Github(token, per_page=100)
 
-# Get a list of people who have bookmarked the repo.
-# Since you'll get a lazy iterator back, you have to traverse
-# it if you want to get the total number of stargazers.
 print(client.get_repo("openstack/nova").full_name)
 print(client.get_repo("openstack/nova").id)
 print(client.get_repo("openstack/nova").description)
@@ -50,3 +46,17 @@ print(len(commit.files))
 print(commit.stats.total)
 print(commit.stats.additions)
 print(commit.stats.deletions)
+
+# PyGithub generally provides a lazy iterator we need to exhaust the lazy iterator with a list comprehension
+stargazers = [s.sha for s in commits]
+
+# head = {'Authorization': 'token {}'.format(token)}
+head = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer {}'.format(token),
+    'User-Agent': username  # The API recommends this
+}
+
+r = requests.get('https://api.github.com/repos/openstack/nova/commits/962eda94d52321c3237da870c3d0455c6f0e851b',
+                 headers=head)
+print(r.status_code)
