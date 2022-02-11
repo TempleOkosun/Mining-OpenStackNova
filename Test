@@ -29,13 +29,16 @@ def extract_commits(repo_name: str, no_of_months: int) -> list:
     return result
 
 
-# head = {'Authorization': 'token {}'.format(token)}
-head = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer {}'.format(token),
-    'User-Agent': username  # The API recommends this
-}
+def commit_contents(commits_sha: list) -> dict:
+    head = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {}'.format(token),
+        'User-Agent': username  # The API recommends this
+    }
 
-r = requests.get('https://api.github.com/repos/openstack/nova/commits/962eda94d52321c3237da870c3d0455c6f0e851b',
-                 headers=head)
-print(r.status_code)
+    response = requests.get(
+        'https://api.github.com/repos/openstack/nova/commits/962eda94d52321c3237da870c3d0455c6f0e851b',
+        headers=head)
+    print(response.status_code)
+    pass
+# head = {'Authorization': 'token {}'.format(token)}
