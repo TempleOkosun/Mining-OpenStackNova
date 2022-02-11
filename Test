@@ -1,0 +1,52 @@
+import os
+from github import Github
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
+from dotenv import load_dotenv
+load_dotenv()
+
+
+token = os.environ.get("ACCESS_TOKEN")
+
+# XXX: Specify your own access token here
+
+
+# Specify a username and repository of interest for that user.
+
+client = Github(token, per_page=100)
+
+# Get a list of people who have bookmarked the repo.
+# Since you'll get a lazy iterator back, you have to traverse
+# it if you want to get the total number of stargazers.
+print(client.get_repo("openstack/nova").full_name)
+print(client.get_repo("openstack/nova").id)
+print(client.get_repo("openstack/nova").description)
+print(client.get_repo("openstack/nova").url)
+
+# Subtract 20 months from current date
+n = 6
+current_date = datetime.today()
+past_date = current_date - relativedelta(months=n)
+
+print(current_date)
+print(past_date)
+
+print(client.get_repo("openstack/nova").get_commits(since=past_date, until=current_date).totalCount)
+commits = client.get_repo("openstack/nova").get_commits(since=past_date, until=current_date)
+commit = client.get_repo("openstack/nova").get_commit("79ec4e2938615a7524fd4c7c05cddeee8256f4a3")
+# x = 1
+# for commit in commits:
+#     print("Commit " + str(x) + " : " + commit.sha)
+#     x = x + 1
+#     client.get_repo("openstack/nova").get_commit(commit.sha)
+
+
+print(commit.author)
+print(commit.url)
+print(commit.files)
+print(type(commit.files))
+print(len(commit.files))
+print(commit.stats.total)
+print(commit.stats.additions)
+print(commit.stats.deletions)
