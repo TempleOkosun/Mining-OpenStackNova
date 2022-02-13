@@ -59,11 +59,15 @@ def prepare_data(commits):
             # Adding data attributes one at a time
             row["commit_sha"] = commit["sha"]
             row["commit_node_id"] = commit["node_id"]
-            # data["commit_author"] = commit["author"]["login"]
+            # row["commit_author"] = commit["author"]["login"]
+            # row["committer"] = commit["committer"]["login"]
             row["commit_html_url"] = commit["html_url"]
             row["commit_date"] = commit["commit"]["author"]["date"]
+            row["filepath"] = file["filename"]
+            row["filename"] = os.path.basename(row["filepath"])
+            row["filetype"] = os.path.splitext(row["filename"])[1]
+            row["directory"] = os.path.dirname(row["filepath"])
 
-            row["filename"] = file["filename"]
             row["file_sha"] = file["sha"]
             row["file_status"] = file["status"]
             row["additions"] = file["additions"]
@@ -74,6 +78,7 @@ def prepare_data(commits):
             yield row
 
 
+
 # prepare_data(commit_contents(extract_commits("octocat/hello-world", 133), "octocat/hello-world"))
 # prepare_data(commit_contents(extract_commits("openstack/nova", 6), "openstack/nova"))
 # print(prepare_data(commit_contents(extract_commits("TempleOkosun/EVChargerReg", 12), "TempleOkosun/EVChargerReg")))
@@ -81,5 +86,6 @@ data_row = (
     prepare_data(commit_contents(extract_commits("TempleOkosun/EVChargerReg", 12), "TempleOkosun/EVChargerReg")))
 
 for record in data_row:
+
     print(record)
 
