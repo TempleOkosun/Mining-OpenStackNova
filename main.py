@@ -1,5 +1,5 @@
 import requests
-
+from Test import *
 
 def get_commits(repo, total_no_of_commits):
     #
