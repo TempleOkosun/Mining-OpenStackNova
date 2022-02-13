@@ -81,8 +81,3 @@ def prepare_data(commits):
 # prepare_data(commit_contents(extract_commits("octocat/hello-world", 133), "octocat/hello-world"))
 # prepare_data(commit_contents(extract_commits("openstack/nova", 6), "openstack/nova"))
 # print(prepare_data(commit_contents(extract_commits("TempleOkosun/EVChargerReg", 12), "TempleOkosun/EVChargerReg")))
-data_row = (
-    prepare_data(commit_contents(extract_commits("TempleOkosun/EVChargerReg", 12), "TempleOkosun/EVChargerReg")))
-
-for record in data_row:
-    print(record)
