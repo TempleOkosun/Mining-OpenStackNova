@@ -15,7 +15,7 @@ username = os.environ.get("GITHUB_USERNAME")
 
 # Repo details
 repo = 'openstack/nova'
-time_period = 1
+time_period = 6
 
 # 1. Extract all commits shas
 target_commits = extract_commits(token, repo, time_period)
