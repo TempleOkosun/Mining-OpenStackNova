@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from github import Github  # PyGitHub library to use GitHub API v3
 
 
-# This function will help extract all commits sha's and returns a tuple (access_token, repo_name : str, commits_shas: []
+# This function will help extract all commits sha's & returns a tuple (access_token, repo_name : str, commits_shas: []
 def extract_commits(access_token: str, repo_name: str, no_of_months: int) -> tuple:
     # Authentication and connection to GitHub API
     client = Github(access_token, per_page=100)
@@ -23,6 +23,11 @@ def extract_commits(access_token: str, repo_name: str, no_of_months: int) -> tup
     # PyGithub generally provides a lazy iterator, so we need to exhaust the lazy iterator with a list comprehension.
     commits = [commit.sha for commit in paginated_commits]
 
+    print("The provided access token is: {token}".format(token=access_token))
+    print("The target repo is: {repo}".format(repo=repo_name))
+    print("Commits for: {duration} months will be collected".format(duration=no_of_months))
+    print("Successfully collected all required commits shas")
+    print("The total no of commit is: {commit_count}".format(commit_count=paginated_commits.totalCount))
     return access_token, repo_name, commits
 
 
@@ -66,7 +71,6 @@ def prepare_data(target_commits: tuple, username) -> list:
 
 # prepare_data(commit_contents(extract_commits("octocat/hello-world", 133), "octocat/hello-world"))
 # prepare_data(commit_contents(extract_commits("openstack/nova", 6), "openstack/nova"))
-# data = (prepare_data((extract_commits("TempleOkosun/EVChargerReg", 12))))
 
 
 # Creates a json file to store collected data.
