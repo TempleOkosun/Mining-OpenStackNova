@@ -1,10 +1,12 @@
+# Required imports
+import json
 import os
 from datetime import datetime
 
 import requests
 from dateutil.relativedelta import relativedelta
-from dotenv import load_dotenv
-from github import Github
+from dotenv import load_dotenv  # manage environment variables
+from github import Github  # PyGitHub library to use GitHub API v3
 
 load_dotenv()
 
@@ -30,54 +32,56 @@ def extract_commits(repo_name: str, no_of_months: int) -> list:
     return commits
 
 
-def commit_contents(commits_shas: list, repo_name: str):
-    print(commits_shas)
+def commit_content(commit_sha: str, repo_name: str):
+    # Requests data
+    # head = {'Authorization': 'token {}'.format(token)}
+    head = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer {}'.format(token),  # Provide authorization token
+        'User-Agent': username  # The API recommends using GitHub username as user-agent
+    }
+    url = 'https://api.github.com/repos/{repo_name}/commits/{sha}'.format(repo_name=repo_name, sha=commit_sha)
+    response = requests.get(url, headers=head)
+    commit = response.json()
 
+    return commit
+
+
+def prepare_data(shas):
     commits = []
-
-    for commit_sha in commits_shas:
-        # Requests data
-        # head = {'Authorization': 'token {}'.format(token)}
-        head = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer {}'.format(token),  # Provide authorization token
-            'User-Agent': username  # The API recommends using GitHub username as user-agent
-        }
-        url = 'https://api.github.com/repos/{repo_name}/commits/{sha}'.format(repo_name=repo_name, sha=commit_sha)
-        response = requests.get(url, headers=head)
-        commit = response.json()
-        commits.append(commit)
-
-    return commits
-
-
-def prepare_data(commits):
-    row = {}
-
+    for sha in shas:
+        record = commit_content(sha, "TempleOkosun/EVChargerReg")
+        commits.append(record)
+    rows = []
     for commit in commits:
-        for file in commit["files"]:
-            # Adding data attributes one at a time
-            row["commit_sha"] = commit["sha"]
-            row["commit_node_id"] = commit["node_id"]
-            # row["commit_author"] = commit["author"]["login"]
-            # row["committer"] = commit["committer"]["login"]
-            row["commit_html_url"] = commit["html_url"]
-            row["commit_date"] = commit["commit"]["author"]["date"]
-            row["filepath"] = file["filename"]
-            row["filename"] = os.path.basename(row["filepath"])
-            row["filetype"] = os.path.splitext(row["filename"])[1]
-            row["directory"] = os.path.dirname(row["filepath"])
+        row = {"commit_sha": commit["sha"], "commit_node_id": commit["node_id"], "commit_html_url": commit["html_url"],
+               "commit_date": commit["commit"]["author"]["date"], "files": commit["files"]}
+        rows.append(row)
+        # Adding data attributes one at a time
+        # row["commit_author"] = commit["author"]["login"]
+        # row["committer"] = commit["committer"]["login"]
+        # row["filepath"] = file["filename"]
+        # row["filename"] = os.path.basename(row["filepath"])
+        # row["filetype"] = os.path.splitext(row["filename"])[1]
+        # row["directory"] = os.path.dirname(row["filepath"])
+        #
+        # row["file_sha"] = file["sha"]
+        # row["file_status"] = file["status"]
+        # row["additions"] = file["additions"]
+        # row["deletions"] = file["deletions"]
+        # row["changes"] = file["changes"]
+        # row["file_blob"] = file["blob_url"]
 
-            row["file_sha"] = file["sha"]
-            row["file_status"] = file["status"]
-            row["additions"] = file["additions"]
-            row["deletions"] = file["deletions"]
-            row["changes"] = file["changes"]
-            row["file_blob"] = file["blob_url"]
-
-            yield row
+    return rows
 
 
 # prepare_data(commit_contents(extract_commits("octocat/hello-world", 133), "octocat/hello-world"))
 # prepare_data(commit_contents(extract_commits("openstack/nova", 6), "openstack/nova"))
-# print(prepare_data(commit_contents(extract_commits("TempleOkosun/EVChargerReg", 12), "TempleOkosun/EVChargerReg")))
+data = (prepare_data((extract_commits("TempleOkosun/EVChargerReg", 12))))
+
+with open('data12.json', 'w', encoding="utf8") as outfile:
+    # outfile.write(json.dumps(data))
+    # outfile.write(str(data))
+    json.dump(data, outfile, indent=0, separators=(',', ':'))
+
+print("Done writing JSON data into .json file")
