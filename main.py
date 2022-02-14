@@ -9,9 +9,13 @@ load_dotenv()
 token = os.environ.get("ACCESS_TOKEN")
 username = os.environ.get("GITHUB_USERNAME")
 
+# Test & dev repo details
+# repo = 'TempleOkosun/EVChargerReg'
+# time_period = 13
+
 # Repo details
-repo = 'TempleOkosun/EVChargerReg'
-time_period = 13
+repo = 'openstack/nova'
+time_period = 1
 
 # 1. Extract all commits shas
 target_commits = extract_commits(token, repo, time_period)

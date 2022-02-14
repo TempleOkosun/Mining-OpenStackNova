@@ -25,9 +25,11 @@ def extract_commits(access_token: str, repo_name: str, no_of_months: int) -> tup
 
     print("The provided access token is: {token}".format(token=access_token))
     print("The target repo is: {repo}".format(repo=repo_name))
+    print("The total no of commits in this repo is: {commit_count}".format(commit_count=paginated_commits.totalCount))
     print("Commits for: {duration} months will be collected".format(duration=no_of_months))
     print("Successfully collected all required commits shas")
-    print("The total no of commit is: {commit_count}".format(commit_count=paginated_commits.totalCount))
+    print("The total no of commits collected is: {commit_count}".format(commit_count=len(commits)))
+
     return access_token, repo_name, commits
 
 
@@ -62,19 +64,16 @@ def prepare_data(target_commits: tuple, username) -> list:
     rows = []
     # For each commit object in commits [], extract the data attributes into row & store the objects(row) in rows.
     for commit in commits:
+        print("processing record for commit: sha - {sha}".format(sha=commit["sha"]))
         row = {"commit_sha": commit["sha"], "commit_node_id": commit["node_id"], "commit_html_url": commit["html_url"],
                "commit_date": commit["commit"]["author"]["date"], "files": commit["files"]}
         rows.append(row)
-
+    print("All record have been successfully processed")
     return rows
-
-
-# prepare_data(commit_contents(extract_commits("octocat/hello-world", 133), "octocat/hello-world"))
-# prepare_data(commit_contents(extract_commits("openstack/nova", 6), "openstack/nova"))
 
 
 # Creates a json file to store collected data.
 def export_data(data: list):
     with open('data.json', 'w', encoding="utf8") as outfile:
         json.dump(data, outfile, indent=0, separators=(',', ':'))
-    print("Done writing JSON data into .json file")
+    print("Done writing JSON data into data.json file")
