@@ -35,6 +35,7 @@ def extract_commits(access_token: str, repo_name: str, no_of_months: int) -> tup
 # PyGitHub provides a friendly interface to the GitHub API but abstracts away most file attributes for each commit.
 # Using request we can have access to all data attributes on files per commit which are important for the analysis.
 def commit_content(access_token: str, username: str, commit_sha: str, repo_name: str):
+    print("status: retrieving commit: sha - {sha}".format(sha=commit_sha))
     # Prepare Requests data
     head = {
         'Content-Type': 'application/json',
@@ -44,7 +45,6 @@ def commit_content(access_token: str, username: str, commit_sha: str, repo_name:
     url = 'https://api.github.com/repos/{repo_name}/commits/{sha}'.format(repo_name=repo_name, sha=commit_sha)
     response = requests.get(url, headers=head)
     commit = response.json()
-
     return commit
 
 
