@@ -1,43 +1,39 @@
 # Required imports
 import json
-import os
 from datetime import datetime
 
 import requests
 from dateutil.relativedelta import relativedelta
-from dotenv import load_dotenv  # manage environment variables
 from github import Github  # PyGitHub library to use GitHub API v3
 
-load_dotenv()
 
-# XXX: Specify your own access token here
-token = os.environ.get("ACCESS_TOKEN")
-username = os.environ.get("GITHUB_USERNAME")
-
-
-def extract_commits(repo_name: str, no_of_months: int) -> list:
+# This function will help extract all commits sha's and returns a tuple (access_token, repo_name : str, commits_shas: []
+def extract_commits(access_token: str, repo_name: str, no_of_months: int) -> tuple:
     # Authentication and connection to GitHub API
-    client = Github(token, per_page=100)
+    client = Github(access_token, per_page=100)
 
-    # Retrieve data from 6 months ago i.e. subtract 6 months from current date
+    # Retrieve data from n: no_of_months months ago i.e. subtract n months from current date
     period = no_of_months
     current_date = datetime.today()
     past_date = current_date - relativedelta(months=period)
 
+    # GitHub Api responses are paginated & we already set to 100 items per page
     paginated_commits = client.get_repo(repo_name).get_commits(since=past_date, until=current_date)
 
-    # PyGithub generally provides a lazy iterator we need to exhaust the lazy iterator with a list comprehension
+    # PyGithub generally provides a lazy iterator, so we need to exhaust the lazy iterator with a list comprehension.
     commits = [commit.sha for commit in paginated_commits]
 
-    return commits
+    return access_token, repo_name, commits
 
 
-def commit_content(commit_sha: str, repo_name: str):
-    # Requests data
-    # head = {'Authorization': 'token {}'.format(token)}
+# This function will use request library to get content of each commit.
+# PyGitHub provides a friendly interface to the GitHub API but abstracts away most file attributes for each commit.
+# Using request we can have access to all data attributes on files per commit which are important for the analysis.
+def commit_content(access_token: str, username: str, commit_sha: str, repo_name: str):
+    # Prepare Requests data
     head = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer {}'.format(token),  # Provide authorization token
+        'Authorization': 'Bearer {}'.format(access_token),  # Provide GitHub authorization token due to rate limits
         'User-Agent': username  # The API recommends using GitHub username as user-agent
     }
     url = 'https://api.github.com/repos/{repo_name}/commits/{sha}'.format(repo_name=repo_name, sha=commit_sha)
@@ -47,43 +43,34 @@ def commit_content(commit_sha: str, repo_name: str):
     return commit
 
 
-def prepare_data(shas):
+# This function receives a tuple of repo_name str and commits_shas []
+# Loops through each sha in commits_shas [] and retrieves the full commit
+# Extracts the required data points from each commit to form a row of data.
+def prepare_data(target_commits: tuple, username) -> list:
+    access_token, repo_name, shas = target_commits  # unpack token, repo, shas
+
     commits = []
+    # Get each commit object and store in the commit list
     for sha in shas:
-        record = commit_content(sha, "TempleOkosun/EVChargerReg")
+        record = commit_content(access_token, username, sha, repo_name)
         commits.append(record)
     rows = []
+    # For each commit object in commits [], extract the data attributes into row & store the objects(row) in rows.
     for commit in commits:
         row = {"commit_sha": commit["sha"], "commit_node_id": commit["node_id"], "commit_html_url": commit["html_url"],
                "commit_date": commit["commit"]["author"]["date"], "files": commit["files"]}
         rows.append(row)
-        # Adding data attributes one at a time
-        # row["commit_author"] = commit["author"]["login"]
-        # row["committer"] = commit["committer"]["login"]
-        # row["filepath"] = file["filename"]
-        # row["filename"] = os.path.basename(row["filepath"])
-        # row["filetype"] = os.path.splitext(row["filename"])[1]
-        # row["directory"] = os.path.dirname(row["filepath"])
-        #
-        # row["file_sha"] = file["sha"]
-        # row["file_status"] = file["status"]
-        # row["additions"] = file["additions"]
-        # row["deletions"] = file["deletions"]
-        # row["changes"] = file["changes"]
-        # row["file_blob"] = file["blob_url"]
 
     return rows
 
 
 # prepare_data(commit_contents(extract_commits("octocat/hello-world", 133), "octocat/hello-world"))
 # prepare_data(commit_contents(extract_commits("openstack/nova", 6), "openstack/nova"))
-data = (prepare_data((extract_commits("TempleOkosun/EVChargerReg", 12))))
+# data = (prepare_data((extract_commits("TempleOkosun/EVChargerReg", 12))))
 
 
-def export_data(data):
+# Creates a json file to store collected data.
+def export_data(data: list):
     with open('data.json', 'w', encoding="utf8") as outfile:
-        # outfile.write(json.dumps(data))
-        # outfile.write(str(data))
         json.dump(data, outfile, indent=0, separators=(',', ':'))
-
     print("Done writing JSON data into .json file")
