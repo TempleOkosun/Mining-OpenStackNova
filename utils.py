@@ -79,9 +79,11 @@ def prepare_data(shas):
 # prepare_data(commit_contents(extract_commits("openstack/nova", 6), "openstack/nova"))
 data = (prepare_data((extract_commits("TempleOkosun/EVChargerReg", 12))))
 
-with open('data12.json', 'w', encoding="utf8") as outfile:
-    # outfile.write(json.dumps(data))
-    # outfile.write(str(data))
-    json.dump(data, outfile, indent=0, separators=(',', ':'))
 
-print("Done writing JSON data into .json file")
+def export_data(data):
+    with open('data.json', 'w', encoding="utf8") as outfile:
+        # outfile.write(json.dumps(data))
+        # outfile.write(str(data))
+        json.dump(data, outfile, indent=0, separators=(',', ':'))
+
+    print("Done writing JSON data into .json file")
