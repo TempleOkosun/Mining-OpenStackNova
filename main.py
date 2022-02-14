@@ -1,30 +1,28 @@
-import requests
+import os
 
+from dotenv import load_dotenv  # to manage environment variables
 
-def get_commits(repo, total_no_of_commits):
-    #
-    all_commits = []
+from utils import prepare_data, extract_commits, export_data
 
-    n = 1
-    params = {'page': n, 'per_page': 100}
-    r = requests.get(repo, params=params)
+load_dotenv()
+# XXX: Specify your own access token here
+token = os.environ.get("ACCESS_TOKEN")
+username = os.environ.get("GITHUB_USERNAME")
 
-    # returned paginated commits
-    result = r.json()
-    all_commits.extend(result)
+# Test & dev repo details
+# repo = 'TempleOkosun/EVChargerReg'
+# time_period = 13
 
-    # while len(all_commits) < total_no_of_commits:
-    #     n = n + 1
-    #     more = requests.get(repo, params=params)
-    #     # returned paginated commits
-    #     result_more = more.json()
-    #     all_commits.extend(result_more)
+# Repo details
+repo = 'openstack/nova'
+time_period = 6
 
-    for commit in all_commits:
-        print(commit)
-    print(len(all_commits))
+# 1. Extract all commits shas
+target_commits = extract_commits(token, repo, time_period)
 
+# 2. Pull together the data. Get each commits and retrieve the desired contents for analysis.
+data = prepare_data(target_commits, username)
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    get_commits('https://api.github.com/repos/openstack/nova/commits', 200)
+    # 3. Store collected as json file for further use
+    export_data(data)
