@@ -48,3 +48,18 @@ in pandas for json normalization.
 file did not provide sufficient error details to help understand why the json file was not being decoded properly.
 
 Also, PyGitHub documentation was not so robust.
+
+### How to use the tool
+Data collection script:
+1. clone the project repo
+2. cd into the project root directory
+3. you need to create a .env file at the project root directory and provide (ACCESS_TOKEN and GITHUB_USERNAME) <br>
+   ACCESS_TOKEN='token' <br>
+   GITHUB_USERNAME='user' <br>
+   Alternatively, you can also specify it directly in the main.py file and ignore the use of .env file
+4. You can change the target repo or time also in the main.py
+5. Run the main.py file. 
+    ```
+    python main.py 
+    ```
+    when it is done a data.json file is created.
