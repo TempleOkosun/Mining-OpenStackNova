@@ -16,7 +16,6 @@ data.json file containing a list of contents of each commit.
 * A jupyter notebook: for further data manipulation, analysis, visualization, and report. The data.json file outputted 
 from running the script will be loaded into the notebook for analysis.
 
-  
 ### Core tools, libraries and resources used:
 * [Python](https://www.python.org): Python programming language
 * [PyGitHub Library](https://pygithub.readthedocs.io/en/latest/introduction.html): Python library for interacting with GitHub API v3
@@ -26,7 +25,6 @@ from running the script will be loaded into the notebook for analysis.
 * [json formatter & validator](https://jsonformatter.curiousconcept.com): for validating and exploring API responses
 * [Postman](https://www.postman.com): for exploring GitHub API end points
 * [notepad++](https://notepad-plus-plus.org): To save json outputs, and item count operations to validate data.
-
 
 ### Approach
 
