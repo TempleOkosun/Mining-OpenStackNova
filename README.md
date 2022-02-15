@@ -56,9 +56,11 @@ Data collection script:
 3. you need to create a .env file at the project root directory and provide (ACCESS_TOKEN and GITHUB_USERNAME) <br>
    ACCESS_TOKEN='token' <br>
    GITHUB_USERNAME='user' <br>
-   Alternatively, you can also specify it directly in the main.py file and ignore the use of .env file
-4. You can change the target repo or time also in the main.py
-5. Run the main.py file. 
+   Alternatively, you can also specify it directly in the main.py file and ignore the use of .env file <br>
+   [Creating a personal access token for GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+    
+5. You can change the target repo or time also in the main.py
+6. Run the main.py file. 
        ```
        python main.py 
        ```
