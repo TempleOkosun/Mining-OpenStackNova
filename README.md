@@ -68,3 +68,9 @@ Data collection script:
 
 
 ![Script in action](images/script_in_action.gif)
+
+Jupyter notebook
+1. If you have anaconda installed, open jupyter notebook and browse to the project directory then select the provided
+notebook to see the analysis, results and report.
+2. If you are using PyCharm, you can launch the jupyter notebook from the ide directly and select the browser icon to 
+see the analysis in the default browser.
