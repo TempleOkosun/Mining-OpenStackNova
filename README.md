@@ -59,7 +59,10 @@ Data collection script:
    Alternatively, you can also specify it directly in the main.py file and ignore the use of .env file
 4. You can change the target repo or time also in the main.py
 5. Run the main.py file. 
-    ```
-    python main.py 
-    ```
-    when it is done a data.json file is created.
+       ```
+       python main.py 
+       ```
+   when it is done a data.json file is created. <br>
+
+
+![Script in action](images/script_in_action.gif)
