@@ -18,9 +18,15 @@ from running the script will be loaded into the notebook for analysis.
 
   
 ### Core tools, libraries and resources used:
-* [PyGitHub Library](https://pygithub.readthedocs.io/en/latest/introduction.html): for interacting with GitHub API v3
-* [requests](https://docs.python-requests.org/en/latest): for additional http requests to GitHub API
+* [Python](https://www.python.org): Python programming language
+* [PyGitHub Library](https://pygithub.readthedocs.io/en/latest/introduction.html): Python library for interacting with GitHub API v3
+* [requests](https://docs.python-requests.org/en/latest): Python library for additional http requests to GitHub API
+* [pandas library](https://pandas.pydata.org): Python data analysis library.
+* [jupyter notebook](https://jupyter.org): For organizing analysis, visualization and report
 * [json formatter & validator](https://jsonformatter.curiousconcept.com): for validating and exploring API responses
 * [Postman](https://www.postman.com): for exploring GitHub API end points
 * [notepad++](https://notepad-plus-plus.org): To save json outputs, and item count operations to validate data.
+
+
+### Approach
 
