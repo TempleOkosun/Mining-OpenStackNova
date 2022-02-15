@@ -19,7 +19,7 @@ from running the script will be loaded into the notebook for analysis.
 ### Core tools, libraries and resources used:
 * [Python](https://www.python.org): Python programming language
 * [PyGitHub Library](https://pygithub.readthedocs.io/en/latest/introduction.html): Python library for interacting with GitHub API v3
-* [requests](https://docs.python-requests.org/en/latest): Python library for additional http requests to GitHub API
+* [requests](https://docs.python-requests.org/en/latest): Python library used for additional http requests to GitHub API
 * [pandas library](https://pandas.pydata.org): Python data analysis library.
 * [jupyter notebook](https://jupyter.org): For organizing analysis, visualization and report
 * [json formatter & validator](https://jsonformatter.curiousconcept.com): for validating and exploring API responses
@@ -62,7 +62,7 @@ Data collection script:
        ```
        python main.py 
        ```
-   when it is done a data.json file is created. <br>
+   when the script is done, a data.json file is created. <br>
 
 
 ![Script in action](images/script_in_action.gif)
