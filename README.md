@@ -27,4 +27,24 @@ from running the script will be loaded into the notebook for analysis.
 * [notepad++](https://notepad-plus-plus.org): To save json outputs, and item count operations to validate data.
 
 ### Approach
+In coming up with this solution, the first step was to research and explore GitHub to find out how I could get the data 
+required. The 2 possible options were to: scrape or use the API. The GitHub API had very generous limits for
+authenticated requests that would be sufficient for this project and the commits' endpoint would provide all the data.
 
+The next step was to determine, how to interact with the API. The GitHub API can be well interacted with via octokit a
+javascript based library but due to previous experience in data analysis with python and pandas, my preference was to 
+utilize what the python ecosystem provides. While I could use requests library for all the interactions, I found 
+PyGitHub had a very friendly interface to interact with GitHub API. After using PyGitHub to connect with the API and 
+retrieve all commits, I discovered access to file attributes for each commit were abstracted away and eventually had to 
+use requests library to retrieve individual commit.
+
+### Challenges
+The two key areas of challenge were:
+* Extracting the data points to form a row: The commit data is a semi-structured json with files as a list of file 
+objects. Initially tried using nested for loops to get a flat row but later discovered a more efficient method provided 
+in pandas for json normalization.
+
+* Storing the collected data temporarily as a json file to be read in later for analysis. Pandas method to read json
+file did not provide sufficient error details to help understand why the json file was not being decoded properly.
+
+Also, PyGitHub documentation was not so robust.
