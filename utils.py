@@ -42,7 +42,7 @@ def commit_content(access_token: str, username: str, commit_sha: str, repo_name:
     head = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer {}'.format(access_token),  # Provide GitHub authorization token due to rate limits
-        'User-Agent': username  # The API recommends using GitHub username as user-agent
+        'User-Agent': username  # The GitHub API recommends using GitHub username as user-agent
     }
     url = 'https://api.github.com/repos/{repo_name}/commits/{sha}'.format(repo_name=repo_name, sha=commit_sha)
     response = requests.get(url, headers=head)
@@ -72,7 +72,7 @@ def prepare_data(target_commits: tuple, username) -> list:
     return rows
 
 
-# Creates a json file to store collected data.
+# This function creates a json file to store collected data.
 def export_data(data: list):
     with open('data.json', 'w', encoding="utf8") as outfile:
         json.dump(data, outfile, indent=0, separators=(',', ':'))
