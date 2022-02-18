@@ -73,5 +73,14 @@ Data collection script:
 Jupyter notebook
 1. If you have anaconda installed, open jupyter notebook and browse to the project directory then select the provided
 notebook to see the analysis, results and report.
-2. If you are using PyCharm, you can launch the jupyter notebook from the ide directly and select the browser icon to 
-see the analysis in the default browser.
+2. if you don't have anaconda installed, you can install jupyter notebook <br>
+    ```
+       pip install notebook
+    ```
+   <br> then change directory to the project directory and launch jupyter notebook <br>
+    
+   ```
+       jupyter notebook
+    ```
+3. If you are using latest PyCharm, you can launch the jupyter notebook from the IDE directly and select the browser 
+icon to see the analysis in the default browser.
